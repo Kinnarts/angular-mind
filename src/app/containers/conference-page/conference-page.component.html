@@ -1,0 +1,87 @@
+<div class="conference-page">
+  <div class="conference-page--screen conference-page--screen_black">
+    <div class="center">
+      <div class="top left right">
+        <div class="group font-2x">
+          <div class="conference-name">
+          Some
+          </div>
+          <mat-icon>edit</mat-icon>
+        </div>
+        <div class="group">
+          <mat-icon class="toggle" [ngClass]="{toggle_red: recording}" (click)="toggleRecording()">radio_button_checked</mat-icon>
+          <mat-icon *ngIf="camera" class="toggle toggle_green" (click)="toggleCamera()">videocam</mat-icon>
+          <mat-icon *ngIf="!camera" class="toggle" (click)="toggleCamera()">videocam_off</mat-icon>
+          <mat-icon *ngIf="microphone" class="toggle toggle_green" (click)="toggleMicrophone()">mic</mat-icon>
+          <mat-icon *ngIf="!microphone" class="toggle" (click)="toggleMicrophone()">mic_off</mat-icon>
+          <mat-icon *ngIf="volume" class="toggle toggle_green" (click)="toggleVolume()">volume_up</mat-icon>
+          <mat-icon *ngIf="!volume" class="toggle" (click)="toggleVolume()">volume_off</mat-icon>
+
+        </div>
+      </div>
+      <div class="media">
+        <video [ngClass]="{hide: !layout}" #videoPlayer autoplay playsinline class="conference-page--video">
+        </video>
+        <div class="participants" *ngIf="!layout">
+          <ng-container *ngFor="let participant of conference.participants">
+            <div class="participant" *ngIf="participant.media.video || participant.media.audio">
+              <app-participant-video
+                [stream]="participant.getMediaStream({ video: participant.media.video, audio: participant.media.audio })"
+                [participant]="participant"
+                [muted]="!volume">
+              </app-participant-video>
+            </div>
+          </ng-container>
+          <div class="participant">
+            <app-participant-video
+              *ngIf="conference.me"
+              [stream]="stream"
+              [participant]="conference.me"
+              [muted]="true">
+            </app-participant-video>
+          </div>
+        </div>
+      </div>
+      <div class="bottom left">
+        <div class="group">
+          <mat-icon class="toggle" [ngClass]="{toggle_green: !layout}" (click)="setLayout(null)">grid_on</mat-icon>
+          <mat-icon class="toggle" [ngClass]="{toggle_green: layout === 'selector'}" (click)="setLayout('selector')">filter_none</mat-icon>
+          <mat-icon class="toggle" [ngClass]="{toggle_green: layout === 'mosaic'}" (click)="setLayout('mosaic')">check_box_outline_blank</mat-icon>
+
+        </div>
+      </div>
+      <div class="bottom right">
+        <div class="group">
+          <a class="toggle--link" [href]="conference.getRecordingURL()" target="_blank">
+            <mat-icon class="toggle">save_alt</mat-icon>
+          </a>
+          <fa class="toggle toggle_fas"
+          name="comments"
+          (click)="hideChat = !hideChat"
+          [ngClass]="{toggle_green: !hideChat}"></fa>
+        </div>
+      </div>
+    </div>
+    <div class="chat" *ngIf="!hideChat">
+      <div class="chat-messages">
+        <div class="chat-message" *ngFor="let message of conference.messages">
+          <div class="chat-message--avatar">
+            <mat-icon class="chat-message--icon">person</mat-icon>
+          </div>
+          <div class="chat-message--sentBy">{{message.getParticipant() ? message.getParticipant().getName() : "EXPARTICIPANT"}}</div>
+          <div class="chat-message--sentAt">{{message.sentAt | date: 'HH:mm:ss z'}}</div>
+          <div class="chat-message--text">{{message.text}}</div>
+        </div>
+      </div>
+      <div class="group">
+        <textarea
+        #messageText
+        class="chat--textarea"
+        rows="1"
+        placeholder="Write a message..."
+        (keydown)="sendMessage($event)"></textarea>
+        <mat-icon class="chat--send" (click)="sendMessage($event)">send</mat-icon>
+      </div>
+    </div>
+  </div>
+</div>
