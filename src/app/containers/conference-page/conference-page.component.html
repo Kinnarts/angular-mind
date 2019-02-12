@@ -1,10 +1,10 @@
-<div class="conference-page">
+<div class="conference-page" (click)="saveEditedName($event)">
   <div class="conference-page--screen conference-page--screen_black">
     <div class="center">
       <div class="top left right">
         <div class="group font-2x">
-          <div class="conference-name">
-          Some
+          <div class="conference-name" (click)="editNameOf(conference, $event)" [attr.contenteditable]="edited.target === conference" (keydown)="saveEditedName($event)">
+          {{conference.name}}
           </div>
           <mat-icon>edit</mat-icon>
         </div>
@@ -26,8 +26,11 @@
           <ng-container *ngFor="let participant of conference.participants">
             <div class="participant" *ngIf="participant.media.video || participant.media.audio">
               <app-participant-video
+                [editedTarget]="edited.target"
                 [stream]="participant.getMediaStream({ video: participant.media.video, audio: participant.media.audio })"
                 [participant]="participant"
+                (onEditClick)="onParticipantEditClick($event)"
+                (onEditKey)="onParticipantEditKey($event)"
                 [muted]="!volume">
               </app-participant-video>
             </div>
@@ -35,8 +38,11 @@
           <div class="participant">
             <app-participant-video
               *ngIf="conference.me"
+              [editedTarget]="edited.target"
               [stream]="stream"
               [participant]="conference.me"
+              (onEditClick)="onParticipantEditClick($event)"
+              (onEditKey)="onParticipantEditKey($event.event)"
               [muted]="true">
             </app-participant-video>
           </div>

@@ -2,7 +2,9 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  Input
+  Input,
+  Output,
+  EventEmitter
 } from '@angular/core';
 
 @Component({
@@ -15,4 +17,8 @@ export class ParticipantVideoComponent {
   @Input() participant: any;
   @Input() stream: any;
   @Input() muted: boolean;
+  @Input() editedTarget: any;
+
+  @Output() onEditClick = new EventEmitter<{ participant: any; event: any }>();
+  @Output() onEditKey = new EventEmitter<{ event: any }>();
 }

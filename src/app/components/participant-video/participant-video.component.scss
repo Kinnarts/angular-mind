@@ -17,3 +17,41 @@
     display: inline-block;
   }
 }
+
+[contenteditable] {
+  border: none;
+  border-bottom: 2px dotted transparent;
+}
+
+[contenteditable]:focus {
+  outline: none;
+}
+
+[contenteditable]:hover {
+  color: #0f6ecd;
+}
+
+[contenteditable='false'] {
+  cursor: pointer;
+}
+
+[contenteditable='true'] {
+  white-space: nowrap;
+  min-width: 100px;
+  /*overflow: hidden;*/
+  border-bottom-color: #0f6ecd;
+  color: #0f6ecd;
+}
+
+[contenteditable] + mat-icon {
+  padding: 5px;
+  color: #0f6ecd;
+}
+
+[contenteditable]:not(:hover) + mat-icon {
+  display: none;
+}
+
+[contenteditable='true'] + mat-icon {
+  display: none;
+}

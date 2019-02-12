@@ -1,5 +1,5 @@
 <video class="participant-video-component--video" [srcObject]="stream" [muted]="muted" autoplay playsinline></video>
 <div class="participant-video-component--plate">
-    <div class="participant-video-component--name">{{participant.name}}</div>
-    <i class="material-icons small">edit</i>
+    <div class="participant-video-component--name" (click)="onEditClick.emit({participant: participant, event: $event})" [attr.contenteditable]="editedTarget === participant" (keydown)="onEditKey.emit({event: $event})">{{participant.name}}</div>
+    <mat-icon>edit</mat-icon>
 </div>

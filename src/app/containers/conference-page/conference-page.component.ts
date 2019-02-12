@@ -40,6 +40,10 @@ export class ConferencePageComponent implements OnInit {
   stream: any;
   conference: any;
   layout: null;
+  edited = {
+    target: null,
+    contenteditable: null
+  };
 
   private url = environment.APIEndpoint;
   private app_id = environment.app_id;
@@ -118,6 +122,40 @@ export class ConferencePageComponent implements OnInit {
       this.videoPlayer.nativeElement.volume = 1;
     }
     this.volume = !this.volume;
+  }
+
+  editNameOf(target, event) {
+    event.stopPropagation();
+    if (this.edited.target !== target) {
+      if (this.edited.target != null) {
+        this.saveEditedName();
+      }
+      this.edited.target = target;
+      this.edited.contenteditable = event.target;
+    }
+  }
+
+  saveEditedName(event?: any) {
+    if (event.type === 'keydown' && event.which === 13) {
+      event.preventDefault();
+    }
+    if (
+      (event.type === 'click' ||
+        (event.type === 'keydown' && event.which === 13)) &&
+      this.edited.target != null
+    ) {
+      this.edited.target.setName(this.edited.contenteditable.textContent);
+      this.edited.target = null;
+      this.edited.contenteditable = null;
+    }
+  }
+
+  onParticipantEditClick(event) {
+    this.editNameOf(event.participant, event.event);
+  }
+
+  onParticipantEditKey(event) {
+    this.saveEditedName(event);
   }
 
   sendMessage(event) {
